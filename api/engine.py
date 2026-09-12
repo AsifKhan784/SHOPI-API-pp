@@ -47,10 +47,13 @@ class ShopifyEngine:
         return "/products/test", "2.95 USD"
     
     def parse_proxy(self, proxy: Proxy) -> Dict:
-        return {
-            "http": f"http://{proxy.username}:{proxy.password}@{proxy.host}:{proxy.port}",
-            "https": f"https://{proxy.username}:{proxy.password}@{proxy.host}:{proxy.port}"
-        }
+    from urllib.parse import quote
+    user = quote(proxy.username, safe='')
+    password = quote(proxy.password, safe='')
+    return {
+        "http": f"http://{user}:{password}@{proxy.host}:{proxy.port}",
+        "https": f"http://{user}:{password}@{proxy.host}:{proxy.port}"   # force http scheme for the proxy itself
+    }
     
     def extract_token(self, html: str, pattern: str = None) -> Optional[str]:
         soup = BeautifulSoup(html, 'html.parser')
