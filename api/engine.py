@@ -141,14 +141,18 @@ class ShopifyEngine:
         # Get proxy
         proxy = None
         if proxy_str:
-            parts = proxy_str.split(':')
-            if len(parts) == 4:
-                proxy = Proxy(
-                    host=parts[0],
-                    port=int(parts[1]),
-                    username=parts[2],
-                    password=parts[3]
-                )
+    if '@' in proxy_str:
+        auth, hostport = proxy_str.rsplit('@', 1)
+        user, password = auth.split(':', 1)
+        host, port = hostport.split(':', 1)
+    else:
+        parts = proxy_str.split(':')
+        if len(parts) == 4:
+            host, port, user, password = parts
+        else:
+            host = port = user = password = None
+    if host:
+        proxy = Proxy(host=host, port=int(port), username=user, password=password)
         
         if not proxy:
             proxy = pool_manager.get_proxy()
