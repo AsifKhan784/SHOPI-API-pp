@@ -5,7 +5,7 @@ from typing import List, Optional
 from datetime import datetime
 from .models import Site, Proxy
 from .config import settings
-from Data.loaders import load_sites, load_proxies
+from data.loaders import load_sites, load_proxies
 
 class PoolManager:
     def __init__(self):
